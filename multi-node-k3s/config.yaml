@@ -11,6 +11,7 @@ cloud_config: |
   #cloud-config
 
   hostname: cattle-k3s-{{ trunc 4 .MachineID }}
+
   users:
     - name: chkpwd
       shell: /bin/bash
@@ -37,8 +38,7 @@ cloud_config: |
           - container://docker.io/tyzbit/flux:latest
 
     grub_options:
-      # Change GRUB menu entry
-      default_menu_entry: "Kairos"
+      saved_entry: "Kairos"
 
   upgrade:
     extra-dirs-rootfs: *longhorn
@@ -50,7 +50,10 @@ cloud_config: |
     devices: ['/']
 
   stages:
-    after-install-chroot: {}
+    after-install-chroot:
+      - name: "Install Longhorn Prerequisites"
+        commands:
+          - apt install parted nfs-common open-iscsi
 
     initramfs:
       - name: "Partition /dev/sdb if needed"
@@ -66,6 +69,13 @@ cloud_config: |
           - mkfs.ext4 -F /dev/sdb1
 
     boot:
+      - name: "Set system keymap"
+        system_firstboot:
+          keymap: us
+
+      - name: "Setup hostname"
+        hostname: "cattles-k3s-{{ trunc 4 .MachineID }}"
+
       - name: "Mount /dev/sdb1 under /mnt/longhorn"
         commands:
           - mount -o rw /dev/sdb1 /mnt/longhorn
@@ -90,6 +100,10 @@ cloud_config: |
         commands:
           - bash /usr/local/lib/extensions/flux/bootstrap.sh &
 
+      - name: "Set modprobe modules"
+        modules:
+          - iscsi_tcp
+
   kubevip:
     enabled: true
     eip: 172.16.16.99
@@ -100,9 +114,9 @@ cloud_config: |
     args:
       - --disable=traefik,servicelb,local-storage
       - --flannel-backend="vxlan"
-      - --service-cidr 172.23.64.0/18
+      - --service-cidr 10.3.25.0/18
       - --write-kubeconfig-mode 0644
-      - --node-taint 'node-role.kubernetes.io/controle-plane=NoSchedule'
+      - --node-taint 'node-role.kubernetes.io/control-plane=effect:NoSchedule'
 
   p2p:
     network_id: cattle-k3s
