@@ -33,7 +33,7 @@ jobs:
         with:
           context: bundles/${{ matrix.bundle }}
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ghcr.io/chkpwd/${{ matrix.bundle }}:auto-${{ steps.time.outputs.time }}
+          tags: ghcr.io/chkpwd/${{ matrix.bundle }}-bundle:auto-${{ steps.time.outputs.time }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
