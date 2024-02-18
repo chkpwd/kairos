@@ -16,7 +16,7 @@ install_cilium_cli() {
   local CILIUM_CLI_VERSION="$(kairos-agent config get "cilium.version" | tr -d '\n')"
   local CLI_ARCH=amd64
 
-  if [ -z "$CILIUM_CLI_VERSION" ]; then
+  if [[ "$CILIUM_CLI_VERSION" =~ "null" ]]; then
       CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
   fi
 
@@ -45,13 +45,15 @@ if [[ -n $(kairos-agent config get cilium.config.args 2>/dev/null) ]]; then
       fi
     done
 
-    if [[ -n $cilium_args ]]; then
+    if [[ $cilium_args != "null" ]]; then
         cilium_install_cmd+=" $cilium_args"
+        info "Using Cilium CLI args: $cilium_args"
     fi
 
     url=$(kairos-agent config get "cilium.config.url" 2>/dev/null)
-    if [[ -n $url ]]; then
+    if [[ $url != "null" ]]; then
         cilium_install_cmd+=" -f $url"
+        info "Specifying Cilium config via URL: $url"
     fi
 fi
 
