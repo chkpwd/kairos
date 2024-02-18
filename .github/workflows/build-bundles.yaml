@@ -3,7 +3,8 @@ name: Kairos Bundles Docker Images
 on:
   push:
     branches: [ main ]
-    paths: [ bundles/**/Dockerfile ]
+    paths: [ bundles/**/ ]
+  workflow_dispatch:
 
 jobs:
   build:
