@@ -112,6 +112,11 @@ cloud_config: |
       - --disable=traefik,servicelb,metrics-server,local-storage
       - --write-kubeconfig-mode 0644
 
+  cilium:
+    enabled: true
+    config:
+      url: 
+
   # -- p2p network configs
   p2p:
     network_id: cattle-k3s

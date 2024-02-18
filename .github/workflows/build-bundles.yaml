@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        bundle: [ flux ]
+        bundle:
+          - flux
+          - cilium
     steps:
       - uses: actions/checkout@v4
 
