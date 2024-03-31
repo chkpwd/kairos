@@ -14,7 +14,7 @@ spec:
     config:
       address: "172.16.16.45"
     env:
-      vip_interface: "ens192"
+      vip_interface: "ens18"
       cp_enable: "true"
       svc_enable: "false"
       vip_leaderelection: "true"
