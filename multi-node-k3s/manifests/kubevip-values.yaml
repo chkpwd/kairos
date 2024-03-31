@@ -12,9 +12,9 @@ spec:
   bootstrap: true
   valuesContent: |-
     config:
-      address: "172.16.16.45"
+      address: "172.16.16.13"
     env:
-      vip_interface: "ens18"
+      vip_interface: "enp0s31f6"
       cp_enable: "true"
       svc_enable: "false"
       vip_leaderelection: "true"
